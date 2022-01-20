@@ -1,8 +1,10 @@
 
 package com.sg.jdbcexample;
 
+import com.mysql.cj.jdbc.MysqlDataSource;
 import java.sql.SQLException;
 import java.util.Scanner;
+import javax.sql.DataSource;
 
 /**
  *
@@ -11,10 +13,19 @@ import java.util.Scanner;
 public class ToDoListMain {
 
     private static Scanner sc;
+    private static DataSource ds;
 
     public static void main(String[] args) {
 
         sc = new Scanner(System.in);
+        
+        try {
+            ds = getDataSource();
+        } catch (SQLException e) {
+            System.out.println("Error connecting to database");
+            System.out.println(e.getMessage());
+            System.exit(0);
+        }
 
         do {
             System.out.println("To-Do List");
@@ -68,4 +79,17 @@ public class ToDoListMain {
     private static void removeItem() throws SQLException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    private static DataSource getDataSource() throws SQLException {
+        MysqlDataSource ds = new MysqlDataSource();
+        ds.setServerName("localhost");
+        ds.setDatabaseName("todoDB");
+        ds.setUser("root");
+        ds.setPassword("password");
+        ds.setServerTimezone("America/Toronto");
+        ds.setUseSSL(false);
+        ds.setAllowPublicKeyRetrieval(true);
+        
+        return ds;
+    } 
 }
